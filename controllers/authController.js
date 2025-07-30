@@ -13,10 +13,11 @@ export const register = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
-    });
+  httpOnly: true,        // prevents access from JS
+  secure: true,          // must be true in HTTPS (Vercel + Render use HTTPS)
+  sameSite: "None",      // required for cross-site cookies
+  maxAge: 7 * 24 * 60 * 60 * 1000, // optional: 7-day expiry
+});
 
     res.status(201).json({ user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
@@ -35,10 +36,11 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
-    });
+  httpOnly: true,        // prevents access from JS
+  secure: true,          // must be true in HTTPS (Vercel + Render use HTTPS)
+  sameSite: "None",      // required for cross-site cookies
+  maxAge: 7 * 24 * 60 * 60 * 1000, // optional: 7-day expiry
+});
 
     res.json({ user: { id: user._id, name: user.name, email: user.email } });
   } catch {
